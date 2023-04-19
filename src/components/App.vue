@@ -3,7 +3,7 @@
     <router-link to="/">
       <img src="../assets/img/logo.png" />
     </router-link>
-    <button class="favorites-btn">
+    <button class="favorites-btn"><RouterLink to="/favorites">
       <svg
         width="23"
         height="22"
@@ -17,14 +17,40 @@
         />
       </svg>
       Избранное
+    </RouterLink>
     </button>
+    <button @click="log(fetchPhoto('ga0v9q6CUVM'))">123</button>
+    <button @click="log(getFavorites())">store</button>
+    <button @click="setfavorites(getPhoto())">fav</button>
   </header>
   <RouterView />
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
+  methods: {
+    ...mapActions(["fetchRandomPhotos", "fetchSearchPhoto", "fetchPhoto"]),
+    ...mapGetters([
+      "getRandPhotos",
+      "getPhoto",
+      "getTotalPages",
+      "getFavorites",
+    ]),
+    ...mapMutations(["setfavorites"]),
+    log(e) {
+      console.log(e);
+    },
+  },
   setup() {},
+  /* created() {
+    this.getRandomPhotos();
+    console.log(this.getRandPhotos(), this.$store.state.photos);
+  }, */
+  async mounted() {
+    this.fetchRandomPhotos();
+    console.log(this.getRandPhotos());
+  },
 };
 </script>
 
@@ -48,6 +74,7 @@ header {
 .img-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .favorites-btn {
   background-color: inherit;
@@ -56,6 +83,11 @@ header {
   border: none;
   cursor: pointer;
   height: 35px;
+}
+.favorites-btn a {
+ color:#ffffff;
+ text-decoration: none;
+ text-align: center;
 }
 .serch-block {
   background-image: url("../assets/img/background.png");
@@ -81,8 +113,8 @@ input:focus {
 }
 .photo-container {
   display: block;
-  width: 473px;
-  height: 440px;
+  width: 430px;
+  height: 380px;
   margin: 20px;
 }
 .photo-container img {
