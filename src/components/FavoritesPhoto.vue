@@ -1,6 +1,8 @@
 <template>
+  <button @click="log(getFavorites())">qwe</button>
   <div v-for="photo in getFavorites()" :key="photo.id">
     <img class="fav-img" :src="photo.urls.regular" />
+    
   </div>
 </template>
 
@@ -16,6 +18,9 @@ export default {
       "getFavorites",
     ]),
     ...mapMutations(["setfavorites"]),
+    log(e, a) {
+      console.log(e, a);
+    },
   },
 };
 </script>

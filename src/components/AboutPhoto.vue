@@ -1,30 +1,37 @@
 <template>
-  <div class="image-container"><img :src="photo.urls.regular" /></div>
+  <div>
+    <p>
+      <img class="prifole-img" :src="getPhoto().user.profile_image.small" />
+      Author: {{ getPhoto().user.name }}
+    </p>
+    <div>
+      <button @click="setfavorites(getPhoto())">
+        <img src="../assets/img/Group4.png" />
+      </button>
+      <a target="_blanc" :href="getPhoto().links.download"
+        ><button>
+          <img src="../assets/img/Group3.png" />
+        </button>
+      </a>
+    </div>
+  </div>
+  <div class="image-container"><img :src="getPhoto().urls.regular" /></div>
 </template>
 <script>
-import axios from "axios";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
+  methods: {
+    ...mapActions(["fetchPhoto"]),
+    ...mapGetters(["getPhoto"]),
+    ...mapMutations(["setfavorites"]),
+
+    log(e, a) {
+      console.log(e, a);
+    },
+  },
   props: ["id"],
   data() {
-    return {
-      accessKey: "mRM4BS17oxyPLqhYQIsu0QC9RxLWn8V8O2cB0BOcBFI",
-      url: "https://api.unsplash.com/",
-      photo: "",
-    };
-  },
-  methods: {
-    log(e) {
-      console.log(e);
-    },
-    fetchPhoto() {
-      axios({
-        method: "get",
-        url: this.url + `photos/${this.id}/?client_id=${this.accessKey}`,
-      }).then((res) => (this.photo = res.data));
-    },
-  },
-  created() {
-    this.fetchPhoto();
+    return {};
   },
 };
 </script>
@@ -36,9 +43,12 @@ img {
 }
 .image-container {
   display: block;
-  width: 1200px;
+  max-width: 1200px;
   height: 720px;
   margin: 0 auto;
   padding-top: 25px;
+}
+.prifole-img {
+  width: 30px;
 }
 </style>

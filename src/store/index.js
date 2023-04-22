@@ -54,17 +54,21 @@ export default createStore({
     setTotalPages: (state, value) => {
       state.totalPages = value;
     },
+    setCurrentPages: (state, value) => {
+      state.currentPage = value;
+    },
     setfavorites: (state, photo) => {
       if (state.favorites.includes(photo)) {
         state.favorites = state.favorites.filter((photos) => photos !== photo);
         console.log("filter");
       } else {
         state.favorites.push(photo);
+        console.log("addinFav");
       }
     },
   },
   getters: {
-    getRandPhotos(state) {
+    getPhotos(state) {
       return state.photos;
     },
     getPhoto(state) {
@@ -72,6 +76,9 @@ export default createStore({
     },
     getTotalPages(state) {
       return state.totalPages;
+    },
+    getCurrentPages(state) {
+      return state.currentPage;
     },
     getFavorites(state) {
       return state.favorites;

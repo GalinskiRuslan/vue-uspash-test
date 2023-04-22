@@ -1,6 +1,6 @@
 <template>
   <div class="serch-block">
-    <form @submit.prevent="fetchSearchPhoto(searchValue)">
+    <form @submit.prevent="fetchSearchPhoto(searchValue), setCurrentPages(1)">
       <input
         class="search-inpt"
         type="search"
@@ -12,70 +12,64 @@
   <div class="img-container">
     <div
       class="photo-container"
-      v-for="photo in photos"
+      v-for="photo in getPhotos()"
       :key="photo.id"
-      @click="log(photo.id)"
+      @click="fetchPhoto(photo.id)"
     >
       <router-link :to="'/photo/' + photo.id">
         <img :src="photo.urls.small" />
       </router-link>
     </div>
   </div>
-  <button @click="() => log(totalPages, currentPage)">123</button>
-  <button v-if="currentPage < totalPages" type="button" @click="nextPage()">
+  <button @click="() => log(getPhotos(), getCurrentPages())">123</button>
+  <button
+    v-if="getCurrentPages() < getTotalPages()"
+    type="button"
+    @click="nextPage()"
+  >
     next
   </button>
-  <button v-if="currentPage > 1" type="button" @click="perPage()">pre</button>
+  <button
+    v-if="getCurrentPages() > 1"
+    type="button"
+    @click="setCurrentPages(getCurrentPages() - 1)"
+  >
+    pre
+  </button>
 </template>
 <script>
-import axios from "axios";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
   methods: {
+    ...mapActions(["fetchRandomPhotos", "fetchSearchPhoto","fetchPhoto"]),
+    ...mapGetters([
+      "getPhotos",
+      "getPhoto",
+      "getTotalPages",
+      "getFavorites",
+      "getCurrentPages",
+    ]),
+    ...mapMutations(["setfavorites", "setCurrentPages"]),
     nextPage() {
-      this.currentPage = this.currentPage + 1;
+      this.setCurrentPages(this.getCurrentPages() + 1);
       this.fetchSearchPhoto(this.searchValue);
     },
     perPage() {
-      this.currentPage = this.currentPage - 1;
+      this.setCurrentPages(this.getCurrentPages() - 1);
       this.fetchSearchPhoto(this.searchValue);
     },
     log(e, a) {
       console.log(e, a);
     },
-    fetchPhotos() {
-      axios({
-        method: "get",
-        url: this.url + `photos/random/?count=8&client_id=${this.accessKey}`,
-      }).then((res) => (this.photos = res.data));
-    },
-    fetchSearchPhoto(value) {
-      axios({
-        method: "get",
-        url:
-          this.url +
-          `/search/photos?page=${this.currentPage}&query=${value}&client_id=${this.accessKey}`,
-      }).then(
-        (res) => (
-          (this.photos = res.data.results),
-          (this.totalPages = res.data.total_pages),
-          console.log(res.data)
-        )
-      );
-    },
   },
-  created() {
-    this.fetchPhotos();
+  async mounted() {
+    this.fetchRandomPhotos();
   },
 
   data() {
     return {
-      accessKey: "mRM4BS17oxyPLqhYQIsu0QC9RxLWn8V8O2cB0BOcBFI",
-      url: "https://api.unsplash.com/",
-      photos: [],
-      currentPage: 1,
       searchValue: "",
-      totalPages: 1,
     };
   },
 
