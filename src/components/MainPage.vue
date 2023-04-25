@@ -29,11 +29,7 @@
   >
     next
   </button>
-  <button
-    v-if="getCurrentPages() > 1"
-    type="button"
-    @click="setCurrentPages(getCurrentPages() - 1)"
-  >
+  <button v-if="getCurrentPages() > 1" type="button" @click="perPage()">
     pre
   </button>
 </template>
@@ -42,7 +38,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
   methods: {
-    ...mapActions(["fetchRandomPhotos", "fetchSearchPhoto","fetchPhoto"]),
+    ...mapActions(["fetchRandomPhotos", "fetchSearchPhoto", "fetchPhoto"]),
     ...mapGetters([
       "getPhotos",
       "getPhoto",
