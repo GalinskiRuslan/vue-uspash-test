@@ -1,6 +1,10 @@
 <template>
-  <div class="serch-block">
-    <form @submit.prevent="fetchSearchPhoto(searchValue), setCurrentPages(1)">
+  <div id="top" class="serch-block">
+    <form
+      @submit.prevent="
+        fetchSearchPhoto(searchValue), setCurrentPages(1), (isSearched = true)
+      "
+    >
       <input
         class="search-inpt"
         type="search"
@@ -21,28 +25,49 @@
       </router-link>
     </div>
   </div>
-  <button @click="() => log(getPhotos(), getCurrentPages())">123</button>
   <button
-    v-if="getCurrentPages() < getTotalPages()"
-    type="button"
-    @click="nextPage()"
+    v-if="!isSearched"
+    class="newrndphoto-btn"
+    @click="() => addedFechPhotos()"
   >
-    next
+    New Random photo
   </button>
-  <button
-    v-if="getCurrentPages() > 1"
-    type="button"
-    @click="setCurrentPages(getCurrentPages() - 1)"
-  >
-    pre
+  <div class="pageNav">
+    <button
+      class="prePagebtn"
+      v-if="getCurrentPages() > 1"
+      type="button"
+      @click="setCurrentPages(getCurrentPages() - 1)"
+    >
+      <img class="arrowPagePre" src="../assets/icons/arrow.png" alt="arrow" />
+      pre Page
+    </button>
+    <button
+      class="nextPagebtn"
+      v-if="getCurrentPages() < getTotalPages()"
+      type="button"
+      @click="nextPage()"
+    >
+      next Page
+      <img class="arrowPageNext" src="../assets/icons/arrow.png" alt="arrow" />
+    </button>
+  </div>
+  <button @click="scrollToTop()" class="noTop">
+    <img src="../assets/icons/Group19.png" alt="arrow" class="arr" />
   </button>
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   name: "App",
+
   methods: {
-    ...mapActions(["fetchRandomPhotos", "fetchSearchPhoto","fetchPhoto"]),
+    ...mapActions([
+      "fetchRandomPhotos",
+      "fetchSearchPhoto",
+      "fetchPhoto",
+      "addedFechPhotos",
+    ]),
     ...mapGetters([
       "getPhotos",
       "getPhoto",
@@ -59,8 +84,11 @@ export default {
       this.setCurrentPages(this.getCurrentPages() - 1);
       this.fetchSearchPhoto(this.searchValue);
     },
-    log(e, a) {
-      console.log(e, a);
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
   },
   async mounted() {
@@ -70,10 +98,68 @@ export default {
   data() {
     return {
       searchValue: "",
+      isSearched: false,
     };
   },
 
   components: {},
 };
 </script>
-<style lang=""></style>
+<style scoped>
+.newrndphoto-btn {
+  border: none;
+  padding: 15px 40px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  margin: 50px 0;
+}
+.arr {
+  padding: 15px 12px;
+}
+.noTop {
+  border: none;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  background: #fff;
+  position: fixed;
+  bottom: 10%;
+  right: 5%;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.pageNav {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+}
+.arrowPageNext {
+  max-width: 50px;
+}
+.arrowPagePre {
+  max-width: 50px;
+  transform: rotate(180deg);
+}
+.prePagebtn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 8px;
+  padding: 5px 15px;
+  margin-bottom: 50px;
+}
+.nextPagebtn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  background: #fff;
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 8px;
+  padding: 5px 15px;
+  margin-bottom: 50px;
+}
+</style>

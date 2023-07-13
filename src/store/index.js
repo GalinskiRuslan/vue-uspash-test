@@ -21,6 +21,14 @@ export default createStore({
           `photos/random/?count=8&client_id=${process.env.VUE_APP_ACCESS_KEY}`,
       }).then((res) => commit("setPhotos", res.data));
     },
+    async addedFechPhotos({ commit }) {
+      return axios({
+        method: "get",
+        url:
+          process.env.VUE_APP_URL +
+          `photos/random/?count=8&client_id=${process.env.VUE_APP_ACCESS_KEY}`,
+      }).then((res) => commit("addedRandomPhotos", res.data));
+    },
     async fetchSearchPhoto({ commit }, value) {
       axios({
         method: "get",
@@ -65,6 +73,9 @@ export default createStore({
         state.favorites.push(photo);
         console.log("addinFav");
       }
+    },
+    addedRandomPhotos: (state, photos) => {
+      state.photos = [...state.photos, ...photos];
     },
   },
   getters: {

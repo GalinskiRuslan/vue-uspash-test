@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="container">
     <router-link to="/">
       <img src="../assets/img/logo.png" />
     </router-link>
@@ -40,6 +40,10 @@ export default {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+}
+.container {
+  max-width: 1920px;
+  margin: 0 auto;
 }
 header {
   background-color: black;
